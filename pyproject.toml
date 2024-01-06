@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "book-reader-backend"
+version = "0.1.0"
+description = ""
+authors = ["andriiskrypnyk <andre.beltukov5656@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.1"
+djangorestframework = "^3.14.0"
+celery = "^5.3.6"
+drf-yasg = "^1.21.7"
+python-dotenv = "^1.0.0"
+setuptools = "^69.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
