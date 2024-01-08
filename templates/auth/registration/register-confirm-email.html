@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Register confirm{% endblock %}
+
+{% block content %}
+  <table class="main">
+
+    <tr>
+      <td>
+        <table class="table">
+          <tr>
+            <td>
+              <p class="title"><b>Confirm your email</b></p>
+              <p class="subtitle">
+                You have created a new account on Book Reader<br>
+                Please confirm your email address {{user_email}}
+              </p>
+              <p class="text" style="margin-bottom: 10px;">
+                To verify your account is safe, please use the following code <br>
+                to create an account — it will expire in 15 minutes:
+              </p>
+              <p class="code" style="margin-bottom: 64px;">{{code}}</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+{% endblock %}
