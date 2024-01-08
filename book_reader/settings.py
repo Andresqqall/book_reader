@@ -29,7 +29,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+# Auth model
 
 
 # Application definition
@@ -47,7 +49,10 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     # Api apps
-    'apps.api'
+    'apps.api',
+    'apps.auth',
+    'apps.users',
+
 
 ]
 
@@ -67,7 +72,7 @@ ROOT_URLCONF = 'book_reader.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,3 +128,40 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MAX_REGISTRATION_ATTEMPTS = 1
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'book_reader',
+#         'USER': 'book_reader',
+#         'PASSWORD': 'book_reader',
+#         'HOST': 'db',  # Use the service name here
+#         'PORT': '5432',
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'book_reader',
+        'USER': 'postgres',
+        'PASSWORD': '1111',
+        'HOST': 'localhost',
+        'PORT': 5432,
+    }
+}
+
+CELERY_BROKER_URL = 'pyamqp://book_reader:book_reader@rabbitmq//'
+CELERY_RESULT_BACKEND = 'rpc://'
+
+# settings for sending e mails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'suppormail@yahoo.com'
+EMAIL_HOST_PASSWORD = 'cemmtcjadjripuqp'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
