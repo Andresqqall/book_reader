@@ -1,6 +1,6 @@
 # Book Reader
 
-Welcome to Book Reader, an application that allows users to explore and manage their digital book collection.
+Welcome to Book Reader
 
 ## Quick Start
 
