@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-django = "^5.0.1"
+django = "5.0"
 djangorestframework = "^3.14.0"
 celery = "^5.3.6"
 drf-yasg = "^1.21.7"
