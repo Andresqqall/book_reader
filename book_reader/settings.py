@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -52,7 +53,9 @@ INSTALLED_APPS = [
     'apps.api',
     'apps.auth',
     'apps.users',
-
+    'apps.books',
+    'apps.library',
+    'apps.analytics'
 
 ]
 
@@ -64,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps_generic.whodidit.middleware.RequestMiddleware',
 ]
 
 ROOT_URLCONF = 'book_reader.urls'
@@ -129,39 +133,52 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MAX_REGISTRATION_ATTEMPTS = 1
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA':  datetime.timedelta(seconds=3600),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(seconds=14 * 24 * 3600),
+}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'book_reader',
-#         'USER': 'book_reader',
-#         'PASSWORD': 'book_reader',
-#         'HOST': 'db',  # Use the service name here
-#         'PORT': '5432',
-#     }
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'apps.auth.jwt_auth.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_RENDERER_CLASSES':[
+        'utils.renderers.CustomJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    ],
+
+    # "DATE_INPUT_FORMATS": ['iso-8601', '%m/%d/%Y %H:%M'],
+}
+
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'book_reader',
-        'USER': 'postgres',
-        'PASSWORD': '1111',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        'USER': 'book_reader',
+        'PASSWORD': 'book_reader',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
+
 
 CELERY_BROKER_URL = 'pyamqp://book_reader:book_reader@rabbitmq//'
 CELERY_RESULT_BACKEND = 'rpc://'
 
 # settings for sending e mails
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'suppormail@yahoo.com'
-EMAIL_HOST_PASSWORD = 'cemmtcjadjripuqp'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
