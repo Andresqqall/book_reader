@@ -7,7 +7,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -31,9 +30,16 @@ class Migration(migrations.Migration):
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='when updated')),
                 ('code', models.CharField(max_length=6, unique=True)),
                 ('applied_date', models.DateTimeField(blank=True, null=True)),
-                ('created_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_created_by', to=settings.AUTH_USER_MODEL, verbose_name='who created')),
-                ('updated_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_updated_by', to=settings.AUTH_USER_MODEL, verbose_name='when updated')),
-                ('registration_try', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='custom_auth.registrationtry')),
+                ('created_by',
+                 models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='%(app_label)s_%(class)s_created_by', to=settings.AUTH_USER_MODEL,
+                                   verbose_name='who created')),
+                ('updated_by',
+                 models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='%(app_label)s_%(class)s_updated_by', to=settings.AUTH_USER_MODEL,
+                                   verbose_name='when updated')),
+                ('registration_try',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='custom_auth.registrationtry')),
             ],
             options={
                 'abstract': False,
@@ -48,8 +54,14 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=6, unique=True)),
                 ('applied_date', models.DateTimeField(blank=True, null=True)),
                 ('email', models.EmailField(max_length=254)),
-                ('created_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_created_by', to=settings.AUTH_USER_MODEL, verbose_name='who created')),
-                ('updated_by', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_updated_by', to=settings.AUTH_USER_MODEL, verbose_name='when updated')),
+                ('created_by',
+                 models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='%(app_label)s_%(class)s_created_by', to=settings.AUTH_USER_MODEL,
+                                   verbose_name='who created')),
+                ('updated_by',
+                 models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                   related_name='%(app_label)s_%(class)s_updated_by', to=settings.AUTH_USER_MODEL,
+                                   verbose_name='when updated')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={

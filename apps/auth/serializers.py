@@ -1,15 +1,16 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.core.signing import BadSignature
 from rest_framework import serializers
 
 from apps.auth.models import RegistrationTry, RegisterOTC
 from utils.encoding_values import get_decoded_value
-from datetime import datetime
+
 User = get_user_model()
 
 
 class LoginSerializer(serializers.Serializer):
-
     email = serializers.EmailField()
     password = serializers.CharField()
 
@@ -65,11 +66,7 @@ class ConfirmRegistrationSerializer(serializers.Serializer):
     def validate(self, attrs):
         self.validate_password(attrs)
 
-        otc = RegisterOTC.objects.filter(
-            id=attrs.pop('token'),
-            applied_date__isnull=True,
-            active_to__gte=datetime.now()
-        )
+        otc = self.get_otc(attrs)
         otc_instance = otc.first()
 
         self.validate_token_expiration(otc)
@@ -77,6 +74,14 @@ class ConfirmRegistrationSerializer(serializers.Serializer):
 
         attrs['otc'] = otc_instance
         return attrs
+
+    @staticmethod
+    def get_otc(attrs):
+        return RegisterOTC.objects.filter(
+            id=attrs.pop('token'),
+            applied_date__isnull=True,
+            active_to__gte=datetime.now()
+        )
 
     @staticmethod
     def validate_token(value):

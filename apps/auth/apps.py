@@ -7,4 +7,4 @@ class AuthConfig(AppConfig):
     label = 'custom_auth'
 
     def ready(self):
-        from apps.auth import signals
+        pass
