@@ -4,13 +4,16 @@ from rest_framework.generics import get_object_or_404
 
 from apps.users.serializers import UserSerializer
 
-# Create your views here.
-
 User = get_user_model()
 
 
 class UserSelfAPIView(generics.RetrieveUpdateAPIView):
+    """
+        Retrieves and updates information for the authenticated user.
+    """
+
     serializer_class = UserSerializer
 
     def get_object(self):
-        return get_object_or_404(User, id=getattr(self.request.user, 'id', None))
+        user_id = getattr(self.request.user, 'id', None)
+        return get_object_or_404(User, id=user_id)
