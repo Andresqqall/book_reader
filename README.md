@@ -21,7 +21,7 @@ To configure the email settings, follow these steps:
 
 1. Open the .env file in your project's root directory. If it doesn't exist, create one.
 
-2. Add the following lines to the .env file:
+2. Add the following lines to the .env file:<br />
   EMAIL_HOST=your_email_host <br />
   EMAIL_PORT=your_email_port <br />
   EMAIL_USE_TLS=your_email_use_tls <br />
