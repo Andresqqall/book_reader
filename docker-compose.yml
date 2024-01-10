@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=book_reader
+      - POSTGRES_USER=book_reader
+      - POSTGRES_DB=book_reader
+      - POSTGRES_HOST=localhost
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U book_reader" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=book_reader
+      - RABBITMQ_DEFAULT_PASS=book_reader
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  migration:
+    image: migration
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: poetry run python manage.py migrate --noinput
+    volumes:
+      - .:/book-reader-backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/book-reader-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: poetry run celery -A book_reader worker -l info -B
+    depends_on:
+      - rabbitmq
+      - backend
